@@ -7,7 +7,7 @@ Currently only consuming raw data.
 More data trasforming and NLP to come.
 
 
-### Get rae data
+### Get raw data
 
 clone repo and run:
 ```python
