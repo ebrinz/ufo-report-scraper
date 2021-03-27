@@ -39,8 +39,10 @@ def parse_site(index=0):
                 report_urls.append(href['href'])
         for report in report_urls:
             file_contents.append(parse_report(base_url+report))
+            print('consumed report: ' + os.path.splitext(month)[0] + ': ' + report)
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(file_contents, f, ensure_ascii=False, indent=4)
+            print('file built at ' + filename)
     
 
 def parse_report(url):
