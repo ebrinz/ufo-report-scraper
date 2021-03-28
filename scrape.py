@@ -6,6 +6,10 @@ import requests
 import traceback
 from bs4 import BeautifulSoup
 
+BASE_URL = 'http://www.nuforc.org/webreports/'
+STARTING_SLUG = 'ndxevent.html'
+OUTPUT_DIR= 'data/raw_month_data/'
+
 def report_schema():
     return dict.fromkeys([
         "report_id",
@@ -20,12 +24,11 @@ def report_schema():
         "status_code"
     ])
 
+
 def parse_site():
-    base_url = 'http://www.nuforc.org/webreports/'
-    starting_slug = 'ndxevent.html'
-    if not os.path.exists('data/raw_month_data'):
-        os.makedirs('data/raw_month_data')
-    months_page = requests.get(base_url + starting_slug).content
+    if not os.path.exists(f'{OUTPUT_DIR}'):
+        os.makedirs(f'{OUTPUT_DIR}')
+    months_page = requests.get(f'{BASE_URL}{STARTING_SLUG}').content
     soup_months = BeautifulSoup(months_page, 'html.parser')
     months = soup_months.find_all('td')
     for month in months:
@@ -34,9 +37,8 @@ def parse_site():
 
 
 def parse_monthly_report_list(month_slug):
-    base_url = 'http://www.nuforc.org/webreports/'
     month_name = month_slug.split('.')[0]
-    filename = f'data/raw_month_data/{month_name}.json'
+    filename = f'{OUTPUT_DIR}{month_name}.json'
     file_index = []
     if os.path.exists(filename):
         with open(filename) as f:
@@ -45,7 +47,7 @@ def parse_monthly_report_list(month_slug):
             file_index.append(report['report_id'])
     else:
         file_contents = []
-    reports_page = requests.get(base_url + month_slug).content
+    reports_page = requests.get(BASE_URL + month_slug).content
     soup_reports = BeautifulSoup(reports_page, 'html.parser')
     table = soup_reports.find('tbody')
     a = table.find_all('a', href=True)
@@ -56,12 +58,12 @@ def parse_monthly_report_list(month_slug):
             report_urls.append(href['href'])
     for report in report_urls:
         print(f'consuming report: {month_name}: {report}')
-        file_contents.append(parse_report(base_url+report))
+        file_contents.append(parse_report(BASE_URL+report))
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(file_contents, f, ensure_ascii=False, indent=4)
         print(f'file built at {filename}')
-    
 
+    
 def parse_report(url):
     report = report_schema()
     report['report_id'] = url.rsplit('/', 1)[-1].split('.')[0]
@@ -98,6 +100,7 @@ def parse_report(url):
     report['description'] = description.replace('"', '\\"')
     return report
 
+
 def parse_field(input):
     parsed = input.split(':', 1)
     output = { 
@@ -106,7 +109,8 @@ def parse_field(input):
     }
     return output
 
-if __name__ == "__main__":
+
+def execute():
     start = time.time()
     start_stamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(start))
     print(f'job starts at GMT {start_stamp}')
@@ -122,3 +126,7 @@ if __name__ == "__main__":
         print(f'job ends with fail at {end_stamp}')
         print(f'execution time: {end}')
         print(f'{traceback.print_exc()}')
+
+
+if __name__ == "__main__":
+    execute()
