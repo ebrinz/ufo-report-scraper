@@ -2,6 +2,10 @@
 
 Scrapes nuforc website reports from [here](http://www.nuforc.org/webreports/ndxevent.html).
 
+This is a well worn path. There are many folks who have scraped this website, and offer ready made repos.
+
+I just thought I'd do some python practice, and leave myself a fun dataset for when I'm feeling analytical.
+
 Currently only consuming raw data.
 
 More data trasforming and NLP to come.
