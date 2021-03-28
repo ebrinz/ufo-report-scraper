@@ -67,18 +67,23 @@ def parse_report(url):
     report['report_id'] = url.rsplit('/', 1)[-1].split('.')[0]
     report_request = requests.get(url)
     report['status_code'] = report_request.status_code
+    # (if) handle broken links
     if report['status_code'] != 200:
         return report
     report_page = report_request.content
-    table_data = []
     soup_report = BeautifulSoup(report_page, 'lxml')
+    # (if) edge case handler for empty body or no table
+    if soup_report.find('body') is None or \
+        soup_report.body.find('table') is None:
+        report['status_code'] = 418
+        return report
     table = soup_report.table
     rows = table.find_all('tr')
     fields = rows[1].td.font
     field_list = []
     for elem in fields.descendants:
         if elem.find('br'):
-            # handle possible double field in Occurred/Entry
+            # (if) handle possible double field in Occurred/Entry
             reg_test = re.search('\(([^\)]+)\)', elem)
             str_test = elem[:5].lower() == 'occur'
             if reg_test and str_test:
