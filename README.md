@@ -9,7 +9,13 @@ More data trasforming and NLP to come.
 
 ### Get raw data
 
-clone repo and run:
+clone repo:
+
+```bash
+pip install -r requirements.txt
+```
+
+then:
 ```python
 python3 scrape.py
 ```
