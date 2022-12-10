@@ -83,7 +83,7 @@ def parse_report(url):
     rows = table.find_all('tr')
     fields = rows[1].td.font
     field_list = []
-    for elem in fields.descendants:
+    for elem in fields.descendants: 
         if elem.find('br'):
             # (if) handle possible double field in Occurred/Entry
             reg_test = re.search('\(([^\)]+)\)', elem)
@@ -102,11 +102,18 @@ def parse_report(url):
 
 
 def parse_field(input):
-    parsed = input.split(':', 1)
-    output = { 
-        'category': parsed[0].split(' ')[0].lower(), 
-        'content': parsed[1].strip()
-    }
+    if ':' in input:
+        parsed = input.split(':', 1)
+        output = { 
+            'category': parsed[0].split(' ')[0].lower(), 
+            'content': parsed[1].strip()
+        }
+    else:
+        # handles random extra <br> line break
+        output = {
+            'category': 'unparsed', 
+            'content': input.strip()
+        }
     return output
 
 
