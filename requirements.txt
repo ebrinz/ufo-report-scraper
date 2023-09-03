@@ -1,3 +1,9 @@
 bs4
 requests
 lxml
+pandas
+langchain
+python-dotenv
+openai
+dateparser
+re
