@@ -1,3 +1,6 @@
+## Deprecated
+# below code will not work due to website redesign
+
 # ufo-report-scraper
 
 Scrapes nuforc website reports from [here](http://www.nuforc.org/webreports/ndxevent.html).
