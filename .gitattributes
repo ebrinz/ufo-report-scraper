@@ -1,1 +1,2 @@
 data/archive/nuforc_dataset.tar filter=lfs diff=lfs merge=lfs -text
+data/reference/citylatlon.txt filter=lfs diff=lfs merge=lfs -text
