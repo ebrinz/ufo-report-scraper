@@ -1,5 +1,5 @@
-data/raw_reports
-data/processed_reports
+data/raw/
+data/processed/
 *.json
 .env
 venv/
