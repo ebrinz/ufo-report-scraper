@@ -1,5 +1,6 @@
 data/raw_reports
 data/processed_reports
+data/solar_activity.csv
 *.json
 .env
 venv/
