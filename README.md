@@ -1,47 +1,46 @@
-# Deprecated
-## Below code will not work due to website redesign!
+# NUFORC Data Analysis
 
-# ufo-report-scraper
+This repository was originally created for developing a web scraper to extract data from the NUFORC (National UFO Reporting Center) website. However, due to significant changes in the website's structure in late 2022, the scraper is no longer functional. 
 
-Scrapes nuforc website reports from [here](http://www.nuforc.org/webreports/ndxevent.html).
+The repository has since been repurposed to analyze NUFORC data collected up until mid-2022. It now focuses on providing tools and methods to explore and gain insights from this data.
 
-This is a well worn path. There are many folks who have scraped this website, and offer ready made repos.
+---
 
-I just thought I'd do some python practice, and leave myself a fun dataset for when I'm feeling analytical.
+## Setup Instructions
 
-Currently only consuming raw data.
-
-More data trasforming and NLP to come.
-
-
-### Get raw data
-
-clone repo, cd in, then:
+### 1. Install `pipenv`
+Ensure you have `pipenv` installed on your system. You can install it with pip:
 
 ```bash
-pip install -r requirements.txt
+pip install pipenv
 ```
 
-then:
+### 2. Initialize pipenv and ipython kernel
+
 ```bash
-python3 scrape.py
+pipenv --python 3.11
+pipenv install ipykernel==6.28.0 python-dotenv==1.0.0
+pipenv run python -m ipykernel install --user --name="da_$(basename $(pwd))" --display-name="da_$(basename $(pwd))"
 ```
-and let it rip for a good while.
 
-you may need to restart it if nuforc throttles you.
+### 3. Extract data from .tar file in data/archive
 
-after getting all reports for each month, it will create a json file for that month with all related reports.
+```bash
+pipenv run python src/extract_archived_data.py
+```
 
-but, once you have the data, each subsequent execution will only get new files.
+### 4. Set up notbook for notebook
 
-so, you can periodically update without crawling all pages again.
+Quit and reopen your text editor and select the kernel and python interpreter dynamically named for this repo
 
 
-### Next steps
+## Sitemap
 
-1) cleanse timestamps
-2) geocode city, st
-3) homogenize duration
-4) grab sighting subject noun groups from description
-5) sentiment analyisis
-6) ...
+├── data/
+│   ├── archive/         # Contains compressed archived data
+│   ├── reference/       # Contains reference data
+│   ├── raw/             # Raw extracted data (after running extract_archived_data.py)
+│   ├── processed/       # Processed data
+├── src/                 # Preprcessing scripts
+├── src/                 # Modeling notebooks
+├── README.md            # Project documentation
