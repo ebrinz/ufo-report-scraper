@@ -88,7 +88,7 @@ def analyze_characteristics_patterns(df: pd.DataFrame):
 
 def analyze_shapes():
     reports = []
-    for json_file in Path("raw_month_data").glob("*.json"):
+    for json_file in Path("data/raw/raw_month_data").glob("*.json"):
         try:
             with open(json_file, 'r') as f:
                 data = json.load(f)

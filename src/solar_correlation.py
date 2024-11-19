@@ -29,7 +29,7 @@ def parse_report_datetime(report_date: Optional[str]) -> Optional[datetime]:
 
 def load_solar_data():
     try:
-        solar_df = pd.read_csv("data/solar_activity.csv")
+        solar_df = pd.read_csv("data/raw/solar_activity.csv")
         solar_df["date"] = pd.to_datetime(solar_df["date"])
         return solar_df
     except Exception as e:
@@ -59,7 +59,7 @@ def analyze_solar_correlation(ufo_df: pd.DataFrame, solar_df: pd.DataFrame):
 
 def analyze_correlation():
     reports = []
-    for json_file in Path("raw_month_data").glob("*.json"):
+    for json_file in Path("data/raw/raw_month_data").glob("*.json"):
         try:
             with open(json_file, "r") as f:
                 data = json.load(f)

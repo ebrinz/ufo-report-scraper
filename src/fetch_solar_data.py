@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 def fetch_solar_data():
     Path("data").mkdir(exist_ok=True)
+    Path("data/raw").mkdir(exist_ok=True, parents=True)
 
     url = "https://www.sidc.be/SILSO/DATA/SN_d_tot_V2.0.txt"
 
@@ -43,7 +44,7 @@ def fetch_solar_data():
         df['date'] = pd.to_datetime(df['date'])
         df['solar_flares'] = df['sunspot_number'] * 0.1
 
-        output_path = "data/solar_activity.csv"
+        output_path = "data/raw/solar_activity.csv"
         df.to_csv(output_path, index=False)
         logger.info(f"Solar data saved to {output_path}")
         logger.info(f"Total records: {len(df)}")

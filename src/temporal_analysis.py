@@ -73,7 +73,7 @@ def analyze_shapes_by_time(df: pd.DataFrame):
 
 def analyze_temporal_patterns():
     reports = []
-    for json_file in Path("raw_month_data").glob("*.json"):
+    for json_file in Path("data/raw/raw_month_data").glob("*.json"):
         try:
             with open(json_file, 'r') as f:
                 data = json.load(f)

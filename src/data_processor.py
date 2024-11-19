@@ -77,7 +77,7 @@ def get_year_stats(reports: List[UFOReport]) -> Dict[str, int]:
                 continue
     return dict(years.most_common(10))
 
-def process_reports(directory: str = "raw_month_data") -> List[UFOReport]:
+def process_reports(directory: str = "data/raw/raw_month_data") -> List[UFOReport]:
     all_reports = []
     total_files = 0
     total_reports = 0
