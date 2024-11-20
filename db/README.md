@@ -10,7 +10,8 @@ For installation instructions, visit the [Docker documentation](https://docs.doc
 docker-compose up --build -d
 ```
 
+<!-- maybe not needed now that this is in init
 ```bash
 docker exec -it postgres_vector psql -U local -d postgres -c "CREATE EXTENSION IF NOT EXISTS postgis;"
-```
+``` -->
 

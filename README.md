@@ -36,11 +36,4 @@ Quit and reopen your text editor and select the kernel and python interpreter dy
 
 ## Sitemap
 
-├── data/
-│   ├── archive/         # Contains compressed archived data
-│   ├── reference/       # Contains reference data
-│   ├── raw/             # Raw extracted data (after running extract_archived_data.py)
-│   ├── processed/       # Processed data
-├── src/                 # Preprcessing scripts
-├── src/                 # Modeling notebooks
-├── README.md            # Project documentation
+├── data/ │ ├── archive/ # Contains compressed archived data │ ├── reference/ # Contains reference data │ ├── raw/ # Raw extracted data (after running extract_archived_data.py) │ ├── processed/ # Processed data ├── src/ # Preprocessing scripts ├── notebooks/ # Modeling notebooks ├── db/ # Database-related files ├── README.md # Project documentation

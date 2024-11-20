@@ -5,12 +5,13 @@ services:
     container_name: postgres_vector
     environment:
       POSTGRES_USER: local
-      POSTGRES_PASSWORD: local_password
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "local"]
       interval: 10s

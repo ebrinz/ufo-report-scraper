@@ -7,8 +7,10 @@ import logging
 from collections import Counter
 from datetime import datetime
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from db.queries import insert_report
+
+from logger_config import get_logger
+logger = get_logger(__name__)
 
 @dataclass
 class UFOReport:
@@ -41,10 +43,8 @@ def parse_report(data: Dict) -> UFOReport:
 
 def read_json_files(directory: str) -> Generator[List[UFOReport], None, None]:
     data_dir = Path(directory)
-
     if not data_dir.exists():
         raise FileNotFoundError(f"Directory {directory} does not exist")
-
     for json_file in data_dir.glob("*.json"):
         try:
             logger.info(f"Processing {json_file.name}")
@@ -77,21 +77,32 @@ def get_year_stats(reports: List[UFOReport]) -> Dict[str, int]:
                 continue
     return dict(years.most_common(10))
 
-def process_reports(directory: str = "data/raw/raw_month_data") -> List[UFOReport]:
-    all_reports = []
+def insert_reports_into_db(reports: List[UFOReport]) -> None:
+    successful_inserts = 0
+    failed_inserts = 0
+    for report in reports:
+        try:
+            insert_report(report.__dict__)
+            successful_inserts += 1
+        except Exception as e:
+            logger.error(f"Failed to insert report {report.report_id}: {e}")
+            failed_inserts += 1
+    logger.info(f"Inserted {successful_inserts} reports into the database.")
+    if failed_inserts > 0:
+        logger.warning(f"Failed to insert {failed_inserts} reports.")
+
+def process_and_insert_reports(directory: str = "data/raw/raw_month_data") -> None:
     total_files = 0
     total_reports = 0
-
     for reports in read_json_files(directory):
         total_files += 1
         total_reports += len(reports)
-        all_reports.extend(reports)
+        insert_reports_into_db(reports)
+    logger.info(f"Processed {total_files} files and inserted {total_reports} reports into the database.")
 
-    logger.info(f"Processed {total_files} files containing {total_reports} reports")
-    return all_reports
 
 if __name__ == "__main__":
-    reports = process_reports()
+    reports = process_and_insert_reports()
 
     print("\nBasic Statistics:")
     print(f"Total reports: {len(reports)}")
