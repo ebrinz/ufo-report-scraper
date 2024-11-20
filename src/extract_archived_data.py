@@ -6,11 +6,10 @@ def extract_tar(tar_path, extract_to):
     if not os.path.exists(tar_path):
         print(f"Error: File '{tar_path}' does not exist.")
         return
-
+    
     os.makedirs(extract_to, exist_ok=True)
 
     try:
-        # Open the tar file
         with tarfile.open(tar_path, 'r') as tar:
             print(f"Extracting files from '{tar_path}' to '{extract_to}'...")
             tar.extractall(path=extract_to)
@@ -18,7 +17,7 @@ def extract_tar(tar_path, extract_to):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# Example usage
+
 if __name__ == "__main__":
     tar_file_path = "data/archive/nuforc_dataset.tar" 
     output_directory = "data/raw" 
