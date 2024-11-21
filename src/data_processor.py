@@ -7,7 +7,7 @@ import logging
 from collections import Counter
 from datetime import datetime
 
-from db.queries import insert_report
+from db.queries import insert_report_raw
 
 from logger_config import get_logger
 logger = get_logger(__name__)
@@ -82,7 +82,7 @@ def insert_reports_into_db(reports: List[UFOReport]) -> None:
     failed_inserts = 0
     for report in reports:
         try:
-            insert_report(report.__dict__)
+            insert_report_raw(report.__dict__)
             successful_inserts += 1
         except Exception as e:
             logger.error(f"Failed to insert report {report.report_id}: {e}")
