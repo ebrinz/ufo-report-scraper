@@ -4,6 +4,8 @@ set -e
 
 psql -U local -d postgres -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 
+psql -U local -d postgres -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
 echo "Attempting table creation now....."
 
 psql -U "local" -d "postgres" -e --set=VERBOSITY=verbose <<-EOSQL

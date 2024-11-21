@@ -7,7 +7,7 @@ import logging
 from collections import Counter
 from datetime import datetime
 
-from db.queries import insert_report
+from db.queries import insert_report_raw
 
 from logger_config import get_logger
 logger = get_logger(__name__)
@@ -82,7 +82,7 @@ def insert_reports_into_db(reports: List[UFOReport]) -> None:
     failed_inserts = 0
     for report in reports:
         try:
-            insert_report(report.__dict__)
+            insert_report_raw(report.__dict__)
             successful_inserts += 1
         except Exception as e:
             logger.error(f"Failed to insert report {report.report_id}: {e}")
@@ -100,9 +100,20 @@ def process_and_insert_reports(directory: str = "data/raw/raw_month_data") -> No
         insert_reports_into_db(reports)
     logger.info(f"Processed {total_files} files and inserted {total_reports} reports into the database.")
 
+def process_reports(directory: str = "data/raw/raw_month_data") -> List[UFOReport]:
+    all_reports = []
+    total_files = 0
+    total_reports = 0
+    for reports in read_json_files(directory):
+        total_files += 1
+        total_reports += len(reports)
+        all_reports.extend(reports)
+    logger.info(f"Processed {total_files} files containing {total_reports} reports")
+    return all_reports
+
 
 if __name__ == "__main__":
-    reports = process_and_insert_reports()
+    reports = process_reports()
 
     print("\nBasic Statistics:")
     print(f"Total reports: {len(reports)}")

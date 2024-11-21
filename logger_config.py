@@ -5,7 +5,7 @@ def get_logger(name=__name__):
     logger.setLevel(logging.DEBUG)
 
     stream_handler = logging.StreamHandler()
-    file_handler = logging.FileHandler("db/db_printout.log")
+    file_handler = logging.FileHandler("its.log")
 
     stream_handler.setLevel(logging.INFO)
     file_handler.setLevel(logging.DEBUG)
