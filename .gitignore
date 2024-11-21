@@ -2,4 +2,4 @@ data/raw/
 data/processed/
 *.json
 .env
-db/db_printout.log
+its.log
