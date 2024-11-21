@@ -100,9 +100,20 @@ def process_and_insert_reports(directory: str = "data/raw/raw_month_data") -> No
         insert_reports_into_db(reports)
     logger.info(f"Processed {total_files} files and inserted {total_reports} reports into the database.")
 
+def process_reports(directory: str = "data/raw/raw_month_data") -> List[UFOReport]:
+    all_reports = []
+    total_files = 0
+    total_reports = 0
+    for reports in read_json_files(directory):
+        total_files += 1
+        total_reports += len(reports)
+        all_reports.extend(reports)
+    logger.info(f"Processed {total_files} files containing {total_reports} reports")
+    return all_reports
+
 
 if __name__ == "__main__":
-    reports = process_and_insert_reports()
+    reports = process_reports()
 
     print("\nBasic Statistics:")
     print(f"Total reports: {len(reports)}")
