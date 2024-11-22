@@ -39,7 +39,7 @@ docker-compose -f db/docker-compose.yml up --build -d
 This script is designed to process and manage UFO report data by providing a series of modular commands for different pipeline stages. Each stage is controlled via command-line arguments.
 
 
-Run the script with one or more of the following arguments:
+Run the script with one or more of the following arguments from within your pipenv environment:
 
 ```bash
 python seed_pipeline.py --extract --ingest --transform --embed --reference --setup_summary
