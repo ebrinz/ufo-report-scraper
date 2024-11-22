@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS ufo_reports_raw (
     description TEXT,
     status_code INT,
     characteristics TEXT
-)
+);
 
 CREATE TABLE IF NOT EXISTS ufo_reports_transform (
     report_id VARCHAR(255) PRIMARY KEY,
@@ -29,11 +29,11 @@ CREATE TABLE IF NOT EXISTS ufo_reports_transform (
 CREATE TABLE IF NOT EXISTS description_sentence_embeddings (
     report_id VARCHAR(255) NOT NULL,
     sentence_id VARCHAR(255) NOT NULL,
-    embedding VECTOR(128),
+    embedding VECTOR(384),
     PRIMARY KEY (report_id, sentence_id)
 );
 
 CREATE TABLE IF NOT EXISTS description_averaged_embeddings (
     report_id VARCHAR(255) PRIMARY KEY,
-    embedding VECTOR(128)
+    embedding VECTOR(384)
 );

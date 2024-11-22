@@ -32,23 +32,27 @@ def execute_sql_script(script_path: str):
             conn.close()
             logger.debug("Database connection closed after executing schema script.")
 
-def wild_query(query):
+def wild_query(query, fetch_results=False):
     conn = None
+    results = None
     try:
-        logger.info(f"Attempting to wild query {query}")
+        logger.info(f"Attempting to wild query: {query}")
         conn = get_connection()
         with conn.cursor() as cursor:
             cursor.execute(query)
+            if fetch_results:  # Check if we need to fetch results
+                results = cursor.fetchall()  # Fetch all rows
         conn.commit()
-        logger.info(f"Successfully inserted report: {query}")
+        logger.info(f"Successfully ran: {query}")
     except Exception as e:
-        logger.error(f"Error inserting report: {e}")
+        logger.error(f"Error in query execution: {e}")
         if conn:
             conn.rollback()
     finally:
         if conn:
             conn.close()
-            logger.debug("Database connection closed after insert.")
+            logger.debug("Database connection closed.")
+    return results
 
 def insert_report_raw(report):
     insert_query = """

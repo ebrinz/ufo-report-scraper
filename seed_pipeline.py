@@ -2,6 +2,7 @@ import argparse
 from src.extract_archived_data import extract_tar
 from src.data_processor import process_and_insert_reports
 from src.data_transformer import process_and_insert_transformed_reports
+from src.data_embeddings import generate_and_insert_embeddings
 from db.queries import execute_sql_script, wild_query
 
 def main():
@@ -23,23 +24,26 @@ def main():
         print('Seeding the database with archive data...')
         process_and_insert_reports()
     if args.transform:
+        #### this takes way too long - need to implement bulk insert, andperhaps break this into multiple tables
         wild_query('DROP TABLE ufo_reports_transform')
         execute_sql_script('db/schema.sql')
-        process_and_insert_transformed_reports()
         print('Transforming and formatting raw data...')
+        process_and_insert_transformed_reports()
     if args.embed:
+        wild_query('DROP TABLE IF EXISTS description_sentence_embeddings')
+        wild_query('DROP TABLE IF EXISTS description_averaged_embeddings')
+        execute_sql_script('db/schema.sql')
         print('Creating vectorized embeddings with report descriptions...')
-        ## drop embeddings tables
-        ## run schema
+        generate_and_insert_embeddings()
     if args.reference:
         print('Creating reference tables...')
-        ## drop embeddings tables
-        ## run schema
+        wild_query('DROP TABLE IF EXISTS reference_table')
+        execute_sql_script('db/schema.sql')
+        # create_reference_tables()
     if args.setup_summary:
         print('Seeding the database with archive data...')
         ## print summary
-    else:
-        print('Run with --help to see instructions.')
+        # setup_summary()
 
 if __name__ == "__main__":
     main()

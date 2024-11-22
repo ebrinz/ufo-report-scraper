@@ -3,7 +3,6 @@ from datetime import datetime
 from pathlib import Path
 import json
 from typing import List, Optional, Dict, Generator
-import logging
 from collections import Counter
 from datetime import datetime
 

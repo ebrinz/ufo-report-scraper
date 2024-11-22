@@ -33,7 +33,45 @@ pipenv run python src/extract_archived_data.py
 
 Quit and reopen your text editor and select the kernel and python interpreter dynamically named for this repo
 
+### 5. Bringup postgres database container
 
-## Sitemap
+```bash
+docker-compose -f db/docker-compose.yml up --build -d
+```
 
-├── data/ │ ├── archive/ # Contains compressed archived data │ ├── reference/ # Contains reference data │ ├── raw/ # Raw extracted data (after running extract_archived_data.py) │ ├── processed/ # Processed data ├── src/ # Preprocessing scripts ├── notebooks/ # Modeling notebooks ├── db/ # Database-related files ├── README.md # Project documentation
+### 6. Execute seeding pipeline
+
+
+This script is designed to process and manage UFO report data by providing a series of modular commands for different pipeline stages. Each stage is controlled via command-line arguments.
+
+
+Run the script with one or more of the following arguments:
+
+```bash
+python seed_pipeline.py --extract --ingest --transform --embed --reference --setup_summary
+```
+
+# ingesting and especially transforming take **way too long** right now - will fix soon with bulk insert, etc.
+
+```bash
+Command-Line Arguments
+Argument	Description
+--extract	Extracts data from a tar file in the archive.
+--ingest	Seeds the ufo_reports_raw table in the database with raw data from the archive.
+--transform	Transforms and formats the raw data into a cleaner state (e.g., for analysis or reporting).
+--embed	Creates vectorized embeddings from report descriptions for machine learning or analytics tasks.
+--reference	Creates reference tables, such as geographical lookups for enhanced data enrichment.
+--setup_summary	Checks previous steps for incomplete or missing data and provides a summary of the pipeline.
+```
+
+## Directory Details
+
+- **`data/`**: Houses all data files and subdirectories.
+  - **`archive/`**: Contains the original compressed data files.
+  - **`reference/`**: Holds lookup and reference tables, such as geographical or metadata files.
+  - **`raw/`**: Stores raw data extracted from archives.
+  - **`processed/`**: Contains data after preprocessing or transformations.
+- **`src/`**: Includes all Python scripts or other code for data preprocessing and pipeline steps.
+- **`notebooks/`**: Contains Jupyter notebooks for exploratory data analysis (EDA) and modeling.
+- **`db/`**: Files related to database schema, queries, or configuration.
+- **`deprecated/`**: There's nothing to see here.
