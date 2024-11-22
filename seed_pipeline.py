@@ -3,6 +3,7 @@ from src.extract_archived_data import extract_tar
 from src.data_processor import process_and_insert_reports
 from src.data_transformer import process_and_insert_transformed_reports
 from src.data_embeddings import generate_and_insert_embeddings
+from src.data_reference import generate_and_insert_reference_data
 from db.queries import execute_sql_script, wild_query
 
 def main():
@@ -39,7 +40,7 @@ def main():
         print('Creating reference tables...')
         wild_query('DROP TABLE IF EXISTS reference_table')
         execute_sql_script('db/schema.sql')
-        # create_reference_tables()
+        generate_and_insert_reference_data()
     if args.setup_summary:
         print('Seeding the database with archive data...')
         ## print summary
