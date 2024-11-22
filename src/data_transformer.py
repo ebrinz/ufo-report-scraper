@@ -145,24 +145,29 @@ def transform_report(raw_report):
             "occurred": format_timestamp(raw_report["occurred"]) if raw_report["occurred"] else None,
             "reported": format_timestamp(raw_report["reported"]) if raw_report["reported"] else None,
             "posted": format_timestamp(raw_report["posted"]) if raw_report["posted"] else None,
-            "location": raw_report["location"].upper(),
-            "shape": format_shape(raw_report["shape"]),
-            "duration": format_duration(raw_report["duration"]),
-            "description": clean_descriptions(raw_report["description"])
+            "location": raw_report["location"].upper() if raw_report["location"] else None,
+            "shape": format_shape(raw_report["shape"]) if raw_report["shape"] else None,
+            "duration": format_duration(raw_report["duration"]) if raw_report["duration"] else None,
+            "description": clean_descriptions(raw_report["description"]) if raw_report["description"] else None,
         }
         return transformed_report
     except Exception as e:
-        logger.error(f"Error transforming report: {raw_report['report_id']}, error: {e}")
+        logger.error(f"Error transforming report: {raw_report.get('report_id', 'Unknown')}, error: {e}")
         return None
-    
+
+
 def process_and_insert_transformed_reports():
     raw_reports = fetch_raw_reports()
     nltk.download('punkt')
-    nltk.download('punkt_tab')
-    transformed_reports = [transform_report(report) for report in raw_reports]
-    for report in transformed_reports:
-        if report:  # Make sure report transformation did not fail
-            insert_report_transform(report)
-            logger.info(f"insertedreport: {report['report_id']}!")
+    transformed_reports = [transform_report(report) for report in raw_reports if report]
+    valid_reports = [report for report in transformed_reports if report]
+    if valid_reports:
+        try:
+            insert_reports_transform_bulk(valid_reports)
+            logger.info(f"Successfully inserted {len(valid_reports)} transformed reports.")
+        except Exception as e:
+            logger.error(f"Error during bulk insert: {e}")
+    else:
+        logger.warning("No valid transformed reports to insert.")
 
 
