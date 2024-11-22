@@ -37,3 +37,12 @@ CREATE TABLE IF NOT EXISTS description_averaged_embeddings (
     report_id VARCHAR(255) PRIMARY KEY,
     embedding VECTOR(384)
 );
+
+CREATE TABLE IF NOT EXISTS geography_lookup (
+    report_id VARCHAR(255) PRIMARY KEY,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(2) NOT NULL,
+    county VARCHAR(255),
+    latitude FLOAT,
+    longitude FLOAT
+);

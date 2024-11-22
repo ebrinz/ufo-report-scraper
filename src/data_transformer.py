@@ -2,6 +2,7 @@ import re
 import csv
 import time
 import dateparser
+import pandas as pd 
 
 from db.queries import fetch_raw_reports, insert_report_transform, insert_reports_transform_bulk
 
@@ -12,8 +13,7 @@ from nltk.tokenize import sent_tokenize
 from logger_config import get_logger
 logger = get_logger(__name__)
 
-us_geos_reorg = {}
-
+# us_geos_reorg = {}
 # with open('data/reference/citylatlon.txt', mode='r') as f:
 #     us_geos = csv.DictReader(f, delimiter='\t')
 #     for item in us_geos:
@@ -25,19 +25,28 @@ us_geos_reorg = {}
 #         us_geos_reorg[item['state']][item['city']]['lon'] = item['longitude']
 #     f.close()
 
-def format_location(loc):
-    output = None
-    split_loc = loc.split(',')
-    city = split_loc[0].strip()
-    state = split_loc[1].strip()
-    city_split = re.findall(r'[\w\s.]+', city)
-    if len(city_split) > 0:
-        city = city_split[0].strip()
-    if state.upper() in us_geos_reorg and city.upper() in us_geos_reorg[state.upper()]:
-        output = [us_geos_reorg[state.upper()][city.upper()]['lat'], us_geos_reorg[state.upper()][city.upper()]['lon']]
-    else:
-        output = None
-    return output
+# def get_city_county_lat_lon_dataframe():
+#     file_path = "data/reference/citylatlon.txt"
+#     df = pd.read_csv(file_path)
+#     filtered_df = df[
+#         ~df['city_state'].str.contains(r"^\(blank\)|Grand Total", na=False)
+#     ]
+#     return filtered_df
+
+# def format_location(loc):
+#     geos = get_city_county_lat_lon_dataframe
+#     output = None
+#     split_loc = loc.split(',')
+#     city = split_loc[0].strip()
+#     state = split_loc[1].strip()
+#     city_split = re.findall(r'[\w\s.]+', city)
+#     if len(city_split) > 0:
+#         city = city_split[0].strip()
+#     if state.upper() in us_geos_reorg and city.upper() in us_geos_reorg[state.upper()]:
+#         output = [us_geos_reorg[state.upper()][city.upper()]['lat'], us_geos_reorg[state.upper()][city.upper()]['lon']]
+#     else:
+#         output = None
+#     return output
 
 def format_timestamp(ts):
     output = None
