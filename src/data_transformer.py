@@ -3,7 +3,7 @@ import csv
 import time
 import dateparser
 
-from db.queries import fetch_raw_reports, insert_report_transform
+from db.queries import fetch_raw_reports, insert_report_transform, insert_reports_transform_bulk
 
 import nltk
 from nltk.tokenize import sent_tokenize

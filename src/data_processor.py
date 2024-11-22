@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Generator
 from collections import Counter
 from datetime import datetime
 
-from db.queries import insert_report_raw
+from db.queries import insert_reports_raw_bulk
 
 from logger_config import get_logger
 logger = get_logger(__name__)
@@ -77,27 +77,20 @@ def get_year_stats(reports: List[UFOReport]) -> Dict[str, int]:
     return dict(years.most_common(10))
 
 def insert_reports_into_db(reports: List[UFOReport]) -> None:
-    successful_inserts = 0
-    failed_inserts = 0
-    for report in reports:
-        try:
-            insert_report_raw(report.__dict__)
-            successful_inserts += 1
-        except Exception as e:
-            logger.error(f"Failed to insert report {report.report_id}: {e}")
-            failed_inserts += 1
-    logger.info(f"Inserted {successful_inserts} reports into the database.")
-    if failed_inserts > 0:
-        logger.warning(f"Failed to insert {failed_inserts} reports.")
+    if not reports:
+        logger.info("No reports to insert.")
+        return
+    try:
+        reports_data = [report.__dict__ for report in reports]
+        insert_reports_raw_bulk(reports_data)
+        logger.info(f"Successfully inserted {len(reports_data)} reports into the database.")
+    except Exception as e:
+        logger.error(f"Bulk insert failed: {e}")
 
 def process_and_insert_reports(directory: str = "data/raw/raw_month_data") -> None:
-    total_files = 0
-    total_reports = 0
-    for reports in read_json_files(directory):
-        total_files += 1
-        total_reports += len(reports)
-        insert_reports_into_db(reports)
-    logger.info(f"Processed {total_files} files and inserted {total_reports} reports into the database.")
+    reports = process_reports(directory)
+    insert_reports_into_db(reports)
+    logger.info(f"Processed and inserted {len(reports)} reports into the database.")
 
 def process_reports(directory: str = "data/raw/raw_month_data") -> List[UFOReport]:
     all_reports = []

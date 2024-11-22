@@ -40,8 +40,8 @@ def wild_query(query, fetch_results=False):
         conn = get_connection()
         with conn.cursor() as cursor:
             cursor.execute(query)
-            if fetch_results:  # Check if we need to fetch results
-                results = cursor.fetchall()  # Fetch all rows
+            if fetch_results:
+                results = cursor.fetchall()
         conn.commit()
         logger.info(f"Successfully ran: {query}")
     except Exception as e:
@@ -81,6 +81,41 @@ def insert_report_raw(report):
         if conn:
             conn.close()
             logger.debug("Database connection closed after insert.")
+
+def insert_reports_raw_bulk(reports):
+    if not reports:
+        logger.info("No reports to insert.")
+        return
+
+    insert_query = """
+        INSERT INTO ufo_reports_raw (
+            report_id, entered, occurred, reported, posted,
+            location, shape, duration, description, status_code, characteristics
+        )
+        VALUES %s
+    """
+    conn = None
+    try:
+        logger.info(f"Attempting to bulk insert {len(reports)} reports.")
+        conn = get_connection()
+        with conn.cursor() as cursor:
+            psycopg2.extras.execute_values(
+                cursor, insert_query,
+                [(r['report_id'], r['entered'], r['occurred'], r['reported'], r['posted'],
+                  r['location'], r['shape'], r['duration'], r['description'], r['status_code'], r['characteristics'])
+                 for r in reports]
+            )
+        conn.commit()
+        logger.info(f"Successfully inserted {len(reports)} reports.")
+    except Exception as e:
+        logger.error(f"Error in bulk insert: {e}")
+        if conn:
+            conn.rollback()
+    finally:
+        if conn:
+            conn.close()
+            logger.debug("Database connection closed after bulk insert.")
+
 
 def fetch_raw_reports():
     query = "SELECT * FROM ufo_reports_raw where status_code = 200;"
@@ -128,3 +163,38 @@ def insert_report_transform(report):
         if conn:
             conn.close()
             logger.debug("Database connection closed after insert.")
+
+
+def insert_reports_transform_bulk(reports):
+    if not reports:
+        logger.info("No reports to insert.")
+        return
+
+    insert_query = """
+        INSERT INTO ufo_reports_transform (
+            report_id, entered, occurred, reported, posted,
+            location, shape, duration, description
+        )
+        VALUES %s
+    """
+    conn = None
+    try:
+        logger.info(f"Attempting to bulk insert {len(reports)} transformed reports.")
+        conn = get_connection()
+        with conn.cursor() as cursor:
+            psycopg2.extras.execute_values(
+                cursor, insert_query,
+                [(r['report_id'], r['entered'], r['occurred'], r['reported'], r['posted'],
+                r['location'], r['shape'], r['duration'], r['description'])
+                for r in reports]
+            )
+        conn.commit()
+        logger.info(f"Successfully inserted {len(reports)} transformed reports.")
+    except Exception as e:
+        logger.error(f"Error in bulk insert: {e}")
+        if conn:
+            conn.rollback()
+    finally:
+        if conn:
+            conn.close()
+            logger.debug("Database connection closed after bulk insert.")
