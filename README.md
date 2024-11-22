@@ -23,23 +23,17 @@ pipenv install ipykernel==6.28.0 python-dotenv==1.0.0
 pipenv run python -m ipykernel install --user --name="da_$(basename $(pwd))" --display-name="da_$(basename $(pwd))"
 ```
 
-### 3. Extract data from .tar file in data/archive
-
-```bash
-pipenv run python src/extract_archived_data.py
-```
-
-### 4. Set up notbook for notebook
+### 3. Set up notbook for notebook
 
 Quit and reopen your text editor and select the kernel and python interpreter dynamically named for this repo
 
-### 5. Bringup postgres database container
+### 4. Bringup postgres database container
 
 ```bash
 docker-compose -f db/docker-compose.yml up --build -d
 ```
 
-### 6. Execute seeding pipeline
+### 5. Execute seeding pipeline
 
 
 This script is designed to process and manage UFO report data by providing a series of modular commands for different pipeline stages. Each stage is controlled via command-line arguments.
@@ -53,9 +47,9 @@ python seed_pipeline.py --extract --ingest --transform --embed --reference --set
 
 # ingesting and especially transforming take **way too long** right now - will fix soon with bulk insert, etc.
 
-```bash
 Command-Line Arguments
 Argument	Description
+```bash
 --extract	Extracts data from a tar file in the archive.
 --ingest	Seeds the ufo_reports_raw table in the database with raw data from the archive.
 --transform	Transforms and formats the raw data into a cleaner state (e.g., for analysis or reporting).
