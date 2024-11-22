@@ -99,7 +99,7 @@ def fetch_raw_reports():
 
 def insert_report_transform(report):
     insert_query = """
-        INSERT INTO ufo_reports_raw (
+        INSERT INTO ufo_reports_transform (
             report_id, entered, occurred, reported, posted,
             location, shape, duration, description
         )

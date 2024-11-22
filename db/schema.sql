@@ -16,10 +16,10 @@ CREATE TABLE IF NOT EXISTS ufo_reports_raw (
 
 CREATE TABLE IF NOT EXISTS ufo_reports_transform (
     report_id VARCHAR(255) PRIMARY KEY,
-    entered INT,
-    occurred INT,
-    reported INT,
-    posted INT,
+    entered BIGINT,
+    occurred BIGINT,
+    reported BIGINT,
+    posted BIGINT,
     location TEXT,
     shape TEXT,
     duration INT,
