@@ -26,7 +26,7 @@ def seed_geography_table():
     values_to_insert = []
     insert_query = """
         INSERT INTO geography_lookup (report_id, city, state, county, latitude, longitude)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        VALUES %s
     """
     dbconn = get_connection()
     cursor = dbconn.cursor()
@@ -59,7 +59,11 @@ def seed_geography_table():
     if values_to_insert:
         try:
             with dbconn.cursor() as cursor:
-                psycopg2.extras.execute_values(cursor, insert_query, values_to_insert)
+                psycopg2.extras.execute_values(
+                    cursor,
+                    insert_query,
+                    values_to_insert
+                )
             dbconn.commit()
             logger.info(f"Inserted {len(values_to_insert)} records into the geography table.")
         except Exception as e:
@@ -68,18 +72,14 @@ def seed_geography_table():
     else:
         logger.warning("No valid records to insert into the geography table.")
 
-
 def normalize_location(city, state):
-    """
-    Normalize city and state strings by removing spaces, punctuation, and lowercasing.
-    """
-    city = re.sub(r"[^\w\s]", "", city).strip().lower()
-    state = state.strip().lower()
+    city = re.sub(r"[^\w\s]", "", city).strip().upper()
+    state = state.strip().upper()
     return city, state
 
 def find_best_match(geos, city, state):
-    geos['normalized_city'] = geos['City'].str.replace(r"[^\w\s]", "", regex=True).str.strip().str.lower()
-    geos['normalized_state'] = geos['Row Labels'].str.strip().str.lower()
+    geos['normalized_city'] = geos['City'].str.replace(r"[^\w\s]", "", regex=True).str.strip().str.upper()
+    geos['normalized_state'] = geos['Row Labels'].str.strip().str.upper()
     match = geos[
         (geos['normalized_city'] == city) &
         (geos['normalized_state'] == state)
