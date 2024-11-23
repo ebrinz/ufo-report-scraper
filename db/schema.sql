@@ -38,6 +38,15 @@ CREATE TABLE IF NOT EXISTS description_averaged_embeddings (
     embedding VECTOR(384)
 );
 
+CREATE TABLE IF NOT EXISTS city_county_lat_lon (
+    city_state VARCHAR(255),
+    state VARCHAR(2),
+    city VARCHAR(255),
+    county VARCHAR(255),
+    latitude FLOAT,
+    longitude FLOAT
+);
+
 CREATE TABLE IF NOT EXISTS geography_lookup (
     report_id VARCHAR(255) PRIMARY KEY,
     city VARCHAR(255) NOT NULL,

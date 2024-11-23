@@ -9,6 +9,7 @@ from difflib import get_close_matches
 logger = get_logger(__name__)
 
 def generate_and_insert_reference_data():
+    insert_city_county_lat_lon_to_table()
     seed_geography_table()
 
 def get_city_county_lat_lon_dataframe():
@@ -17,9 +18,22 @@ def get_city_county_lat_lon_dataframe():
     filtered_df = df[
         ~df['city_state'].str.contains(r"^\(blank\)|Grand Total", na=False)
     ]
-    print(filtered_df.columns)
-    print(filtered_df.head)
     return filtered_df
+
+def insert_city_county_lat_lon_to_table():
+    df = get_city_county_lat_lon_dataframe()
+    values = df.to_records(index=False).tolist()
+    dbconn = get_connection()
+    insert_query = f"""
+    INSERT INTO city_county_lat_lon (city_state, state, city, county, latitude, longitude)
+    VALUES %s
+    """
+    with dbconn.cursor() as cursor:
+        psycopg2.extras.execute_values(cursor, insert_query, values)
+        dbconn.commit()
+    print(f"Inserted {len(values)} rows into the city_county_lat_lon table.")
+
+    
 
 def seed_geography_table():
     geos = get_city_county_lat_lon_dataframe()
@@ -46,11 +60,11 @@ def seed_geography_table():
             if match is not None:
                 values_to_insert.append((
                     report_id,
-                    match['City'],
-                    match['Row Labels'],
-                    match['County'],
-                    match['Latitude'],
-                    match['Longitude']
+                    str(match['City']),
+                    str(match['Row Labels']),
+                    str(match['County']),
+                    float(match['Latitude']),
+                    float(match['Longitude'])
                 ))
             else:
                 logger.warning(f"No match found for location: {location}")
