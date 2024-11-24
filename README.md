@@ -42,10 +42,10 @@ This script is designed to process and manage UFO report data by providing a ser
 Run the script with one or more of the following arguments from within your pipenv environment:
 
 ```bash
-python seed_pipeline.py --extract --ingest --transform --embed --reference --setup_summary
+python seed_pipeline.py --extract --ingest --transform --embed --reference
 ```
 
-# ingesting and especially transforming take **way too long** right now - will fix soon with bulk insert, etc.
+# transforming step takes **way too long** right now - will fix soon with bulk insert, etc.
 
 Command-Line Arguments
 Argument	Description
