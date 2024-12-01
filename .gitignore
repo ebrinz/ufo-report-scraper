@@ -1,5 +1,6 @@
 data/raw/
 data/processed/
 *.json
+.DS_Store
 .env
 its.log
